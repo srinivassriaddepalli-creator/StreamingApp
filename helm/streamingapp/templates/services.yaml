@@ -1,0 +1,50 @@
+{{- range $name, $service := .Values.services }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-{{ $name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streaming-{{ $name }}
+  template:
+    metadata:
+      labels:
+        app: streaming-{{ $name }}
+    spec:
+      containers:
+        - name: {{ $name }}
+          image: "{{ $.Values.imageRegistry }}/{{ $service.image }}:{{ $service.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ $service.port }}
+          {{- if ne $name "frontend" }}
+          env:
+            - name: PORT
+              value: "{{ $service.port }}"
+            - name: MONGO_URI
+              value: "mongodb://streaming-mongodb:27017/{{ $.Values.mongodb.database }}"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: streamingapp-secrets
+                  key: jwt-secret
+            - name: CLIENT_URLS
+              value: "{{ $.Values.frontend.allowedOrigin }}"
+          {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-{{ $name }}
+spec:
+  type: {{ if eq $name "frontend" }}{{ $.Values.frontend.serviceType }}{{ else }}ClusterIP{{ end }}
+  selector:
+    app: streaming-{{ $name }}
+  ports:
+    - port: {{ $service.port }}
+      targetPort: {{ $service.port }}
+      protocol: TCP
+{{- end }}
