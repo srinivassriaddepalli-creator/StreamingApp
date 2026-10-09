@@ -5,7 +5,12 @@ kind: Deployment
 metadata:
   name: streaming-{{ $name }}
 spec:
-  replicas: 1
+  replicas: {{ $service.replicas | default 1 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: streaming-{{ $name }}

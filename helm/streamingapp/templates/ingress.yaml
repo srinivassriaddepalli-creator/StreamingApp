@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamingapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/streaming
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-stream
+                port:
+                  number: 3002
+          - path: /api/admin
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-admin
+                port:
+                  number: 3003
+          - path: /api/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-chat
+                port:
+                  number: 3004
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-chat
+                port:
+                  number: 3004
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-auth
+                port:
+                  number: 3001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-frontend
+                port:
+                  number: 80
