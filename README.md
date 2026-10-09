@@ -159,6 +159,57 @@ The application has been containerized and deployed to Amazon EKS using Jenkins,
 
 - [GitHub Repository](https://github.com/srinivassriaddepalli-creator/StreamingApp)
 - [Jenkins CI/CD Pipeline](https://jenkinsacademics.herovired.com/job/StreamingApp-Srinivas-CI-CD/)
-- [Live StreamFlix Application](http://a724b80962ea041409ffaaf475a72517-1001878487.ap-south-1.elb.amazonaws.com/)
+- [Live StreamFlix Application](http://a84ad60694e6040c189032ed80506985-4211009.ap-south-1.elb.amazonaws.com/)
 
-**Note:** The current Jenkins pipeline automates image builds and ECR publishing. Helm deployment to EKS is performed manually. Monitoring, centralized logging, and scaling validation remain to be completed.
+**Note:** The current Jenkins pipeline automates image builds and ECR publishing. Helm deployment to EKS is performed manually. Amazon CloudWatch monitoring and centralized logging are configured. The frontend has two running replicas; load-based autoscaling has not been verified.
+
+## Final Deployment and CI Verification — October 9, 2026
+
+### Automated Jenkins CI Pipeline
+
+The Jenkins pipeline is configured with **Poll SCM** using the schedule `H/2 * * * *`.
+
+- **Successful build:** #9
+- **Trigger:** Started by an SCM change
+- **Git commit:** `42c764c`
+- **Build result:** SUCCESS
+- **Docker images:** Five application images built and pushed to Amazon ECR
+- **Image tag:** `1.0.3`
+
+Jenkins automatically detects GitHub changes, builds the application images, and publishes them to ECR. Deployment to Amazon EKS is performed separately using Helm.
+
+### Amazon EKS Deployment
+
+- **AWS region:** `ap-south-1`
+- **EKS cluster:** `streamingapp-eks`
+- **Kubernetes namespace:** `streamingapp`
+- **Helm release:** `streamingapp`
+- **Verified Helm revision:** 11
+- **Application deployments:** auth, stream, admin, chat, frontend
+- **Frontend replicas:** 2
+
+### Persistent MongoDB Storage
+
+MongoDB runs as a Kubernetes StatefulSet named `streaming-mongodb-persistent`.
+
+- **StatefulSet:** 1/1 Ready
+- **StorageClass:** `streamingapp-gp3`
+- **PersistentVolumeClaim:** `mongo-data-streaming-mongodb-persistent-0`
+- **EBS volume size:** 10 GiB
+- **PVC status:** Bound
+- **Restored database records:** 8 videos and 1 user
+
+The application uses the persistent MongoDB service instead of the previous ephemeral MongoDB Deployment.
+
+### Application Health Verification
+
+Both the frontend and streaming API returned HTTP 200 after the MongoDB migration and Helm upgrade.
+
+### Live Application
+
+http://a84ad60694e6040c189032ed80506985-4211009.ap-south-1.elb.amazonaws.com/
+
+### Jenkins Pipeline
+
+https://jenkinsacademics.herovired.com/job/StreamingApp-Srinivas-CI-CD/
+
