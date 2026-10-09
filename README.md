@@ -136,3 +136,29 @@ Automated tests are not yet included. Recommended smoke checks:
 ## License
 
 MIT © StreamFlix Team
+
+---
+
+## AWS EKS Deployment — DevOps Project
+
+The application has been containerized and deployed to Amazon EKS using Jenkins, Docker, Amazon ECR, Kubernetes, and Helm.
+
+**Final deployed Docker image version:** `1.0.3`
+
+**Verified Jenkins build:** `#8 — SUCCESS`
+
+**Kubernetes deployment:** Six Running pods across two Ready worker nodes.
+
+### Detailed Project Documentation
+
+- [Complete AWS Deployment Guide](docs/AWS-DEPLOYMENT-GUIDE.md) — architecture, infrastructure, Docker, Jenkins CI/CD, ECR, Kubernetes, Helm, configuration, verification, and operational limitations.
+- [Troubleshooting and Debugging Guide](docs/TROUBLESHOOTING.md) — deployment failures, investigation commands, root causes, fixes, and verification.
+- [Screenshot Evidence Checklist](docs/screenshots/README.md) — required screenshots and naming conventions.
+
+### Project Links
+
+- [GitHub Repository](https://github.com/srinivassriaddepalli-creator/StreamingApp)
+- [Jenkins CI/CD Pipeline](https://jenkinsacademics.herovired.com/job/StreamingApp-Srinivas-CI-CD/)
+- [Live StreamFlix Application](http://a724b80962ea041409ffaaf475a72517-1001878487.ap-south-1.elb.amazonaws.com/)
+
+**Note:** The current Jenkins pipeline automates image builds and ECR publishing. Helm deployment to EKS is performed manually. Monitoring, centralized logging, and scaling validation remain to be completed.
