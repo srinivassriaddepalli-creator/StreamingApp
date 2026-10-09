@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh '''
                     docker build -t streaming-auth:${IMAGE_TAG} ./backend/authService
-                    docker build -t streaming-stream:${IMAGE_TAG} ./backend/streamingService
+                    docker build -f ./backend/streamingService/Dockerfile -t streaming-stream:${IMAGE_TAG} ./backend
                     docker build -t streaming-admin:${IMAGE_TAG} ./backend/adminService
                     docker build -t streaming-chat:${IMAGE_TAG} ./backend/chatService
                     docker build \
