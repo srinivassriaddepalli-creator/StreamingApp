@@ -10,7 +10,7 @@ pipeline {
         AWS_REGION = 'ap-south-1'
         AWS_ACCOUNT_ID = '545931885961'
         ECR_REGISTRY = '545931885961.dkr.ecr.ap-south-1.amazonaws.com'
-        IMAGE_TAG = '1.0.1'
+        IMAGE_TAG = '1.0.3'
     }
 
     stages {
@@ -30,10 +30,12 @@ pipeline {
                     docker build -f ./backend/adminService/Dockerfile -t streaming-admin:${IMAGE_TAG} ./backend
                     docker build -f ./backend/chatService/Dockerfile -t streaming-chat:${IMAGE_TAG} ./backend
                     docker build \
-                      --build-arg REACT_APP_AUTH_API_URL=/api/auth \
-                      --build-arg REACT_APP_STREAMING_API_URL=/api/streaming \
+                      --build-arg REACT_APP_AUTH_API_URL=/api \
+                      --build-arg REACT_APP_STREAMING_API_URL=/api \
+                      --build-arg REACT_APP_STREAMING_PUBLIC_URL= \
                       --build-arg REACT_APP_ADMIN_API_URL=/api/admin \
                       --build-arg REACT_APP_CHAT_API_URL=/api/chat \
+                      --build-arg REACT_APP_CHAT_SOCKET_URL= \
                       -t streaming-frontend:${IMAGE_TAG} ./frontend
                 '''
             }
