@@ -42,7 +42,7 @@ pipeline {
         stage('Push Images to ECR') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'streamingapp-ecr-credentials',
+                    credentialsId: 'streamingapp-ecr-credentials_Srinivas',
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
