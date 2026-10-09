@@ -27,8 +27,8 @@ pipeline {
                 sh '''
                     docker build -t streaming-auth:${IMAGE_TAG} ./backend/authService
                     docker build -f ./backend/streamingService/Dockerfile -t streaming-stream:${IMAGE_TAG} ./backend
-                    docker build -t streaming-admin:${IMAGE_TAG} ./backend/adminService
-                    docker build -t streaming-chat:${IMAGE_TAG} ./backend/chatService
+                    docker build -f ./backend/adminService/Dockerfile -t streaming-admin:${IMAGE_TAG} ./backend
+                    docker build -f ./backend/chatService/Dockerfile -t streaming-chat:${IMAGE_TAG} ./backend
                     docker build \
                       --build-arg REACT_APP_AUTH_API_URL=/api/auth \
                       --build-arg REACT_APP_STREAMING_API_URL=/api/streaming \
